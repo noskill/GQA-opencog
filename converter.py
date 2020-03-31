@@ -154,6 +154,7 @@ relations = {
     'wearing': 'wearing',
     'near': 'near',
     'along': 'along',
+    'alongside': 'beside',
     'in front of': 'front_of',
     'on the back of': 'back_of',
     'hitting': 'hitting',
@@ -164,6 +165,7 @@ relations = {
     'on top of': 'on_top_of',
     'on the bottom of': 'on_bottom_of',
     'above': 'above',
+    'tossing': 'tossing',
     'covered in': 'covered_in',
     'covered by': 'covered_in',
     'wrapped in': 'wrapped_in',
@@ -195,14 +197,17 @@ relations = {
     'eating': 'eating',
     'drinking': 'drinking',
     'flying': 'flying',
+    'washing': 'washing',
     'draped over': 'draped_over',
     'surrounding': 'surrounding',
-    'pulled by': 'pulled_by',
     'looking at': 'looking_at',
+    'kissing': 'kissing',
+    'trying to catch': 'catching',
     'staring at': 'looking_at',
     'looking down at': 'looking_at',
     'looking into': 'looking_into',
     'looking': 'looking_at',
+    'pointing at': 'pointing_at',
     'under': 'under',
     'over': 'over',
     'preparing': 'preparing',
@@ -211,6 +216,8 @@ relations = {
     'around': 'around',
     'covering': 'covering',
     'pulling': 'pulling',
+    'pouring': 'pouring',
+    'sprinkled on': 'on',
     'leading': 'leading',
     'riding on': 'riding',
     'riding in': 'riding',
@@ -246,6 +253,7 @@ relations = {
     'attached to': 'attached_to',
     'looking through': 'looking_through',
     'looking in': 'looking_in',
+    'looking toward': 'looking_at',
     'stuck in': 'stuck_in',
     'grazing on': 'grazing',
     'grazing in': 'grazing',
@@ -259,6 +267,7 @@ relations = {
     'biting': 'biting',
     'leaving': 'leaving',
     'entering': 'entering',
+    'outside': 'outside',
     'contain': 'contain',
     'crossing': 'crossing',
     'licking': 'licking',
@@ -269,6 +278,8 @@ relations = {
     'making': 'making',
     'photographing': 'photographing',
     'guiding': 'guiding',
+    'enclosing': 'enclosing',
+    'larger than': 'larger_than',
     'reading': 'reading',
     'driving': 'driving',
     'coming down': 'coming_down',
@@ -289,11 +300,13 @@ relations = {
     'buying': 'buying',
     'hanging over': 'over',
     'walking toward': 'walking_to',
+    'walking towards': 'walking_to',
     'walking to': 'walking_to',
     'seen through': 'seen_through',
     'beyond': 'behind',
     'across': 'across',
     'walking across': 'walking_across',
+    'running across': 'running_across',
     'walking through': 'walking_through',
     'walking into': 'going_into',
     'going into': 'going_into',
@@ -301,6 +314,8 @@ relations = {
     'flying through': 'flying_through',
     'moving': 'moving',
     'working on': 'working_on',
+    'reflected on': 'reflected_on',
+    'decorated by': 'decorated_by',
     'exiting': 'exiting',
     'displayed on': 'displayed_on',
     'served on': 'served_on',
@@ -325,12 +340,17 @@ relations = {
     'herding': 'herding',
     'painted on': 'painted_on',
     'chewing': 'chewing',
+    'about to hit': 'about_to_hit',
+    'jumping off': 'jumping_off',
+    'jumping on': 'jumping_on',
 }
 
 relations = {k: NormalRelation(v) for (k,v) in relations.items()}
 complex_relations = {
     'working in': (FilterRelation('activity', 'working'),
                             relations['in']),
+    'parked behind': (FilterRelation('activity', 'parked'),
+                            relations['behind']),
     'parked near': (FilterRelation('activity', 'parked'),
                             relations['near']),
     'parked along': (FilterRelation('activity', 'parked'),
@@ -351,6 +371,8 @@ complex_relations = {
                             relations['near']),
     'sitting under': (FilterRelation('activity', 'sitting'),
                             relations['under']),
+    'sitting atop': (FilterRelation('activity', 'sitting'),
+                            relations['on top of']),
     'sitting on top of': (FilterRelation('activity', 'sitting'),
                             relations['on top of']),
     'running on': (FilterRelation('activity', 'running'),
@@ -407,6 +429,8 @@ complex_relations = {
                     relations['along']),
     'flying over': (FilterRelation('activity', 'flying'),
                     relations['over']),
+    'flying above': (FilterRelation('activity', 'flying'),
+                    relations['above']),
     'flying in': (FilterRelation('activity', 'flying'),
                     relations['in']),
     'stacked on': (FilterRelation('activity', 'stacked'),
@@ -441,8 +465,12 @@ complex_relations = {
                      relations['near']),
     'standing by': (FilterRelation('activity', 'standing'),
                      relations['near']),
+    'sleeping in': (FilterRelation('activity', 'sleeping'),
+                     relations['in']),
     'standing in': (FilterRelation('activity', 'standing'),
                      relations['in']),
+    'parked in front of': (FilterRelation('activity', 'parked'),
+                  relations['in front of']),
     'parked in': (FilterRelation('activity', 'parked'),
                   relations['in']),
     'parked at': (FilterRelation('activity', 'parked'),
@@ -451,6 +479,8 @@ complex_relations = {
                   relations['in']),
     'eating at': (FilterRelation('activity', 'eating'),
                   relations['at']),
+    'parked alongside': (FilterRelation('activity', 'parked'),
+                  relations['alongside']),
     'parked on': (FilterRelation('activity', 'parked'),
                   relations['on']),
     'sitting beside': (FilterRelation('activity', 'sitting'),
@@ -459,17 +489,23 @@ complex_relations = {
                        relations['beside']),
     'standing at': (FilterRelation('activity', 'standing'),
                        relations['at']),
+    'standing against': (FilterRelation('activity', 'standing'),
+                       relations['in front of']),
     'standing under': (FilterRelation('activity', 'standing'),
                        relations['under']),
     'walking behind': (FilterRelation('activity', 'walking'),
                      relations['behind']),
     'wading in': (FilterRelation('activity', 'wading'),
                      relations['in']),
+    'walking next to': (FilterRelation('activity', 'walking'),
+                     relations['next to']),
     'walking with': (FilterRelation('activity', 'walking'),
                      relations['with']),
     'walking near': (FilterRelation('activity', 'walking'),
                      relations['near']),
     'hanging in': (FilterRelation('activity', 'hanging'),
+                     relations['in']),
+    'growing in': (FilterRelation('activity', 'growing'),
                      relations['in']),
     'growing behind': (FilterRelation('activity', 'growing'),
                      relations['behind']),
@@ -488,6 +524,8 @@ relations.update({'same shape': RelateSame('shape')})
 relations.update({'same material': RelateSame('material')})
 relations.update({'worn on': WornOn('wearing')})
 relations.update({'surrounded by': WornOn('surrounding')})
+relations.update({'pulled by': WornOn('pulling')})
+relations.update({'followed by': WornOn('following')})
 relations.update({'wrapped around': WornOn('wrapped_in')})
 
 def make_filter(name, var):
@@ -764,7 +802,7 @@ def convert(items, ops, variables, no_obj):
     elif operation[0] == 'choose':
         tmp = []
         if len(operation) == 2 and operation[1] in ('younger', 'older',
-                'healthier', 'longer', 'shorter'):
+                'healthier', 'longer', 'shorter', 'larger', 'smaller'):
             assert len(deps) == 2
             op1 = IfElse(operation[1], deps)
             ops.append(op1)
@@ -849,8 +887,8 @@ def main():
         items = []
         # print(i)
         # print(json.dumps(data[key]['semantic'], indent=2))
-        print('{0}: '.format(i), data[key]['question'])
+        print('{0}: '.format(key), data[key]['question'])
         res = convert(sem, items, variables, no_obj_count)
-        print('{0}: '.format(i), res)
+        print('{0}: '.format(key), res)
 
 main()
