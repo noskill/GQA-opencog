@@ -81,8 +81,11 @@ In such cases they are  replaced with list($X).
 spliting of complex predicates:
 
 00918539:  What is located on top of the toilet the logo is on the surface of?
-```query(name, $E) and on_top_of($E, $Y) and on($X, $Z) and surface_of($Z, $Y) and object(toilet, $Y) and object(logo, $X)
+
 ```
+query(name, $E) and on_top_of($E, $Y) and on($X, $Z) and surface_of($Z, $Y) and object(toilet, $Y) and object(logo, $X)
+```
+
 here the predicate is 'on the surface of', it is split to ```surface_of($Z, $Y) on($X, $Z)```
 ### todo
 
