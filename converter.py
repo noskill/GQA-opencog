@@ -121,7 +121,6 @@ class OnTheEdge(ComplexRelation):
         return res2
 
 class InTheCenter(OnTheEdge):
-    _position = 'in'
 
     def build(self, *args, **kwargs):
         var_name = get_var_name(kwargs['no_obj'], '', kwargs['variables'])
@@ -133,15 +132,18 @@ class InTheCenter(OnTheEdge):
             kwargs1['var_name'] = kwargs['var_name']
         res1 = self.rel1.build(**kwargs1)
         if kwargs['rel_type'] == 'o':
-            res2 = Relation(self._position, args=[kwargs['vars'][0], var_name], dependencies=[res1], variables=[kwargs['var_name']])
+            res2 = Relation(self.rel2.rel_name, args=[kwargs['vars'][0], var_name], dependencies=[res1], variables=[kwargs['var_name']])
         else:
-            res2 = Relation(self._position, args=[kwargs['var_name'], var_name], dependencies=[res1], variables=[kwargs['var_name']])
+            res2 = Relation(self.rel2.rel_name, args=[kwargs['var_name'], var_name], dependencies=[res1], variables=[kwargs['var_name']])
         return res2
 
 
 relations = {
     'to the right of': 'right_of',
     'in the middle of': 'in_middle_of',
+    'at the end of': 'at_end_of',
+    'in the back of': 'in_back_of',
+    'within': 'within',
     'on': 'on',
     'to the left of': 'left_of',
     'by': 'by',
@@ -157,11 +159,16 @@ relations = {
     'alongside': 'beside',
     'in front of': 'front_of',
     'on the back of': 'back_of',
+    'on the other side of': 'on_other_side_of',
     'hitting': 'hitting',
     'with': 'with',
+    'down': 'down',
+    'looking for': 'looking_for',
     'climbing': 'climbing',
     'hidden by': 'hidden_by',
     'full of': 'full_of',
+    'across from': 'across_from',
+    'placed on': 'on',
     'on top of': 'on_top_of',
     'on the bottom of': 'on_bottom_of',
     'above': 'above',
@@ -182,6 +189,7 @@ relations = {
     'drinking from': 'drinks_from',
     'riding': 'rides',
     'blowing out': 'blowing',
+    'going down': 'going_down',
     'talking to': 'talking_to',
     'approaching': 'approaching',
     'using': 'uses',
@@ -208,6 +216,8 @@ relations = {
     'looking into': 'looking_into',
     'looking': 'looking_at',
     'pointing at': 'pointing_at',
+    'pointing': 'pointing_at',
+    'pointing to': 'pointing_at',
     'under': 'under',
     'over': 'over',
     'preparing': 'preparing',
@@ -225,6 +235,7 @@ relations = {
     'playing with': 'playing_with',
     'hugging': 'hugging',
     'edge of': 'edge_of',
+    'surface of': 'surface_of',
     'center of': 'center_of',
     'facing': 'facing',
     'watching': 'watching',
@@ -251,6 +262,7 @@ relations = {
     'hanging off': 'hanging_off',
     'cleaning': 'cleaning',
     'attached to': 'attached_to',
+    'shining through': 'shining_through',
     'looking through': 'looking_through',
     'looking in': 'looking_in',
     'looking toward': 'looking_at',
@@ -264,6 +276,7 @@ relations = {
     'swinging': 'swinging',
     'reaching for': 'reaching_for',
     'growing on': 'growing_on',
+    'growing from': 'growing_on',
     'biting': 'biting',
     'leaving': 'leaving',
     'entering': 'entering',
@@ -280,12 +293,17 @@ relations = {
     'guiding': 'guiding',
     'enclosing': 'enclosing',
     'larger than': 'larger_than',
+    'higher than': 'higher_than',
+    'smaller than': 'smaller_than',
+    'taller than': 'taller_than',
     'reading': 'reading',
     'driving': 'driving',
+    'traveling down': 'going_down',
     'coming down': 'coming_down',
     'towing': 'towing',
     'tying': 'tying',
     'longer than': 'longer_than',
+    'shorter than': 'shorter_than',
     'pushing': 'pushing',
     'petting': 'petting',
     'waiting for': 'waiting_for',
@@ -308,21 +326,31 @@ relations = {
     'walking across': 'walking_across',
     'running across': 'running_across',
     'walking through': 'walking_through',
+    'going through': 'going_through',
     'walking into': 'going_into',
+    'in between': 'between',
+    'piled on': 'on',
+    'scattered on': 'on',
     'going into': 'going_into',
     'getting on': 'going_into',
+    'chained to': 'chained_to',
     'flying through': 'flying_through',
     'moving': 'moving',
     'working on': 'working_on',
     'reflected on': 'reflected_on',
+    'reflecting in': 'reflected_on',
     'decorated by': 'decorated_by',
     'exiting': 'exiting',
     'displayed on': 'displayed_on',
+    'displayed in': 'displayed_on',
     'served on': 'served_on',
+    'cooked in': 'in',
     'hanging out of': 'hanging_off',
+    'hang from': 'hanging_off',
     'grabbing': 'grabbing',
     'mixed with': 'mixed_with',
     'sewn on': 'sewn_on',
+    'drawn on': 'drawn_on',
     'tied to': 'tied_to',
     'balancing on': 'balancing_on',
     'decorated with': 'decorated_with',
@@ -335,6 +363,7 @@ relations = {
     'decorating': 'decorating',
     'tied around': 'tied_around',
     'looking out': 'looking_out',
+    'looking over': 'looking_over',
     'adjusting': 'adjusting',
     'sticking out of': 'on',
     'herding': 'herding',
@@ -365,6 +394,10 @@ complex_relations = {
                             relations['next to']),
     'standing in front of': (FilterRelation('activity', 'standing'),
                             relations['in front of']),
+    'standing around': (FilterRelation('activity', 'standing'),
+                            relations['around']),
+    'sitting around': (FilterRelation('activity', 'sitting'),
+                            relations['around']),
     'sitting inside': (FilterRelation('activity', 'sitting'),
                             relations['inside']),
     'sitting by': (FilterRelation('activity', 'sitting'),
@@ -393,6 +426,8 @@ complex_relations = {
                     relations['with']),
     'sitting next to': (FilterRelation('activity', 'sitting'),
                     relations['next to']),
+    'skiing down': (FilterRelation('activity', 'skiing'),
+                    relations['on']),
     'skiing in': (FilterRelation('activity', 'skiing'),
                     relations['in']),
     'skiing on': (FilterRelation('activity', 'skiing'),
@@ -441,12 +476,16 @@ complex_relations = {
                     relations['in']),
     'lying inside': (FilterRelation('activity','lays'),
                    relations['inside']),
+    'jumping in': (FilterRelation('activity','jumping'),
+                   relations['in']),
     'lying in': (FilterRelation('activity','lays'),
                    relations['in']),
     'skating on': (FilterRelation('activity','skating'),
                     relations['on']),
     'playing in': (FilterRelation('activity','playing'),
                     relations['in']),
+    'playing at': (FilterRelation('activity','playing'),
+                    relations['at']),
     'playing on': (FilterRelation('activity','playing'),
                     relations['on']),
     'lying on': (FilterRelation('activity','lays'),
@@ -505,16 +544,26 @@ complex_relations = {
                      relations['near']),
     'hanging in': (FilterRelation('activity', 'hanging'),
                      relations['in']),
+    'growing next to': (FilterRelation('activity', 'growing'),
+                     relations['next to']),
+    'growing by': (FilterRelation('activity', 'growing'),
+                     relations['near']),
     'growing in': (FilterRelation('activity', 'growing'),
                      relations['in']),
     'growing behind': (FilterRelation('activity', 'growing'),
                      relations['behind']),
+    'growing near': (FilterRelation('activity', 'growing'),
+                     relations['near']),
     'growing along': (FilterRelation('activity', 'growing'),
                      relations['along']),
 }
 
 complex_relations = {k: ComplexRelation(*v) for (k, v) in complex_relations.items()}
 relations.update(complex_relations)
+relations.update({'at the edge of': OnTheEdge(relations['edge of'],
+                       relations['on'])})
+relations.update({'on the surface of': InTheCenter(relations['surface of'],
+                       relations['on'])})
 relations.update({'on the edge of': OnTheEdge(relations['edge of'],
                        relations['on'])})
 relations.update({'in the center of': InTheCenter(relations['center of'],
@@ -523,6 +572,7 @@ relations.update({'same color': RelateSame('color')})
 relations.update({'same shape': RelateSame('shape')})
 relations.update({'same material': RelateSame('material')})
 relations.update({'worn on': WornOn('wearing')})
+relations.update({'worn around': WornOn('wearing')})
 relations.update({'surrounded by': WornOn('surrounding')})
 relations.update({'pulled by': WornOn('pulling')})
 relations.update({'followed by': WornOn('following')})
@@ -802,7 +852,8 @@ def convert(items, ops, variables, no_obj):
     elif operation[0] == 'choose':
         tmp = []
         if len(operation) == 2 and operation[1] in ('younger', 'older',
-                'healthier', 'longer', 'shorter', 'larger', 'smaller'):
+                'healthier', 'longer', 'shorter', 'larger', 'smaller', 'taller',
+               'lower', 'higher',):
             assert len(deps) == 2
             op1 = IfElse(operation[1], deps)
             ops.append(op1)

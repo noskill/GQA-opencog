@@ -36,6 +36,8 @@ object(water, $X) and verify_size(small , $Y)
 
 Conjunction has higher priority than disjunction, with this assumption all programs from GQA may be represented without using parentheses for priorities.
 
+**readable** contains programs in the this form. In **spaces** it is the same, but without commas and parentheses.
+
 ## Examples  
 comparison:
 
@@ -60,19 +62,28 @@ grounding of list:
 ```different(type, list($X)) and object(animal, list($X))```
 
 ```json
-[{"argument": "animal 
-                           (1757748,2007952,2007953,2007950,3781150,
-                           1705696,2680556,3781148,2680554,2680558,
-                           1872450,2007954,2047186)",
-               "dependencies": [],
-               "operation": "select"},
-              {"argument': "type",
-               "dependencies": [0],
-               "operation": 'different'}]
+[{
+		"argument": "animal (1757748, 2007952, 2007953, 2007950, 3781150,1705696, 2680556, 3781148, 2680554, 2680558,1872450, 2007954, 2047186)",
+		"dependencies": [],
+		"operation": "select"
+	},
+	{
+		"argument": "type",
+		"dependencies": [0],
+		"operation": "different"
+	}
+]
 ```
-In this example the program refers to a lager number of nodes in the scene graph.
+In this example the program refers to a large number of nodes in the scene graph.
 In such cases they are  replaced with list($X).
 
+
+spliting of complex predicates:
+
+00918539:  What is located on top of the toilet the logo is on the surface of?
+```query(name, $E) and on_top_of($E, $Y) and on($X, $Z) and surface_of($Z, $Y) and object(toilet, $Y) and object(logo, $X)
+```
+here the predicate is 'on the surface of', it is split to ```surface_of($Z, $Y) on($X, $Z)```
 ### todo
 
 Some complex relations are not split yet:
