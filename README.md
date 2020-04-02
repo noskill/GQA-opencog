@@ -26,8 +26,8 @@ program from the GQA dataset refers to ground truth elements of the scene graph:
 {"argument": "", "dependencies": [2, 3], "operation": "and"}]
 ```
 
-Converter replaces references to concrete vertices like water (447019) with variables to grounded.  
-Many complex relations e.g. on the edge of are split in parts, so result looks like this:
+Converter replaces references to concrete vertices like water (447019) with variables to be grounded.  
+Many complex relations e.g. 'on the edge of' are split in parts, so result looks like this:
 ```
 verify_color(brown, $Y) and on($Y, $Z) and 
 edge_of($Z, $X) and object(horse, $Y) and
@@ -91,6 +91,8 @@ here the predicate is 'on the surface of', it is split to ```surface_of($Z, $Y) 
 
 Some complex relations are not split yet:
 For example 'running through'. Here 'through' characterizes the action of running, while 'running on' can be split to two predicates.  Here we may understand 'on' as referring to the locations of the someone or something running.  'running on' is replaced with ```activity(running, $X) and on($X, $Z)```
+
+tests..
 
 
 
